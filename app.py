@@ -1,12 +1,14 @@
 from datetime import datetime
 import json
 import re
+from flask_cors import CORS
 from pathlib import Path
 
 from flask import Flask, jsonify, request
 
 
 app = Flask(__name__)
+CORS(app, resources={r"/api/*": {"origins": "*"}})
 
 # Store courses.json in the same folder as app.py.
 COURSES_FILE = Path(__file__).parent / "courses.json"

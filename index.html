@@ -1,0 +1,975 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CodeCraftHub: Your Learning Management Platform</title>
+  <style>
+    :root {
+      --primary: #8B5CF6;
+      --primary-dark: #7C3AED;
+      --primary-light: #EDE9FE;
+      --success: #F59E0B;
+      --success-dark: #D97706;
+      --danger: #EF4444;
+      --danger-dark: #DC2626;
+      --neutral-900: #1F2937;
+      --neutral-700: #374151;
+      --neutral-500: #6B7280;
+      --neutral-300: #D1D5DB;
+      --neutral-100: #F3F4F6;
+      --neutral-50: #F9FAFB;
+      --white: #FFFFFF;
+      --radius: 10px;
+      --shadow: 0 1px 3px rgba(31, 41, 55, 0.1), 0 1px 2px rgba(31, 41, 55, 0.06);
+      --shadow-lg: 0 10px 25px rgba(31, 41, 55, 0.15);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background: linear-gradient(180deg, var(--primary-light) 0%, var(--neutral-50) 240px);
+      min-height: 100vh;
+      color: var(--neutral-900);
+      line-height: 1.5;
+    }
+
+    .container {
+      max-width: 1040px;
+      margin: 0 auto;
+      padding: 32px 20px 64px;
+    }
+
+    .page-header {
+      margin-bottom: 28px;
+    }
+
+    .page-header h1 {
+      font-size: 1.75rem;
+      font-weight: 700;
+      line-height: 1.2;
+      color: var(--primary-dark);
+    }
+
+    .page-header p {
+      color: var(--neutral-500);
+      margin-top: 4px;
+    }
+
+    .card {
+      background: var(--white);
+      border: 1px solid var(--neutral-300);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 24px;
+    }
+
+    .card + .card {
+      margin-top: 24px;
+    }
+
+    .card h2 {
+      font-size: 1.15rem;
+      font-weight: 700;
+      margin-bottom: 16px;
+      color: var(--neutral-900);
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .form-grid .full-width {
+      grid-column: 1 / -1;
+    }
+
+    .form-group label {
+      display: block;
+      font-weight: 600;
+      font-size: 0.875rem;
+      margin-bottom: 6px;
+      color: var(--neutral-700);
+    }
+
+    .required::after {
+      content: " *";
+      color: var(--danger);
+    }
+
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid var(--neutral-300);
+      border-radius: 8px;
+      font-size: 0.95rem;
+      font-family: inherit;
+      color: var(--neutral-900);
+      background: var(--white);
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .form-group textarea {
+      resize: vertical;
+      min-height: 84px;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus,
+    .form-group select:focus,
+    .btn:focus-visible {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.35);
+    }
+
+    .field-error {
+      display: none;
+      color: var(--danger-dark);
+      font-size: 0.8rem;
+      margin-top: 4px;
+    }
+
+    .field-error.visible {
+      display: block;
+    }
+
+    .form-group input.invalid,
+    .form-group textarea.invalid,
+    .form-group select.invalid {
+      border-color: var(--danger);
+    }
+
+    .form-actions {
+      grid-column: 1 / -1;
+      display: flex;
+      gap: 12px;
+      margin-top: 4px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      transition: background-color 0.15s ease, transform 0.1s ease, box-shadow 0.15s ease;
+    }
+
+    .btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .btn-primary {
+      background-color: var(--primary);
+      color: var(--white);
+    }
+
+    .btn-primary:hover:not(:disabled) {
+      background-color: var(--primary-dark);
+    }
+
+    .btn-secondary {
+      background-color: var(--neutral-100);
+      color: var(--neutral-700);
+      border: 1px solid var(--neutral-300);
+    }
+
+    .btn-secondary:hover:not(:disabled) {
+      background-color: var(--neutral-300);
+    }
+
+    .btn-success {
+      background-color: var(--success);
+      color: var(--white);
+    }
+
+    .btn-success:hover:not(:disabled) {
+      background-color: var(--success-dark);
+    }
+
+    .btn-danger {
+      background-color: var(--danger);
+      color: var(--white);
+    }
+
+    .btn-danger:hover:not(:disabled) {
+      background-color: var(--danger-dark);
+    }
+
+    .btn-sm {
+      padding: 7px 14px;
+      font-size: 0.85rem;
+    }
+
+    .alert {
+      display: none;
+      padding: 12px 16px;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      margin-bottom: 16px;
+      border: 1px solid transparent;
+    }
+
+    .alert.visible {
+      display: block;
+    }
+
+    .alert-success {
+      background-color: #FEF3C7;
+      border-color: #FCD34D;
+      color: #92400E;
+    }
+
+    .alert-error {
+      background-color: #FEE2E2;
+      border-color: #FCA5A5;
+      color: #991B1B;
+    }
+
+    .spinner-wrap {
+      display: none;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      padding: 32px 0;
+      color: var(--neutral-500);
+      font-size: 0.95rem;
+    }
+
+    .spinner-wrap.visible {
+      display: flex;
+    }
+
+    .spinner {
+      width: 28px;
+      height: 28px;
+      border: 3px solid var(--primary-light);
+      border-top-color: var(--primary);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .btn .mini-spinner {
+      display: none;
+      width: 15px;
+      height: 15px;
+      border: 2px solid rgba(255, 255, 255, 0.4);
+      border-top-color: var(--white);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    .btn.saving .mini-spinner {
+      display: inline-block;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.92rem;
+    }
+
+    th, td {
+      text-align: left;
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--neutral-100);
+      vertical-align: top;
+    }
+
+    thead th {
+      background-color: var(--primary-light);
+      color: var(--primary-dark);
+      font-weight: 700;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      white-space: nowrap;
+    }
+
+    tbody tr:hover {
+      background-color: var(--neutral-50);
+    }
+
+    .course-name {
+      font-weight: 600;
+      color: var(--neutral-900);
+    }
+
+    .course-desc {
+      color: var(--neutral-700);
+      max-width: 320px;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    .badge-not-started {
+      background-color: var(--neutral-100);
+      color: var(--neutral-700);
+    }
+
+    .badge-in-progress {
+      background-color: var(--primary-light);
+      color: var(--primary-dark);
+    }
+
+    .badge-completed {
+      background-color: #FEF3C7;
+      color: #92400E;
+    }
+
+    .actions-cell {
+      white-space: nowrap;
+    }
+
+    .actions-cell .btn + .btn {
+      margin-left: 8px;
+    }
+
+    .empty-state {
+      display: none;
+      text-align: center;
+      padding: 48px 20px;
+      color: var(--neutral-500);
+    }
+
+    .empty-state.visible {
+      display: block;
+    }
+
+    .empty-state .empty-icon {
+      font-size: 2.4rem;
+      margin-bottom: 8px;
+      color: var(--primary);
+    }
+
+    .empty-state h3 {
+      color: var(--neutral-900);
+      font-size: 1.1rem;
+      margin-bottom: 4px;
+    }
+
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(31, 41, 55, 0.55);
+      z-index: 100;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .modal-overlay.visible {
+      display: flex;
+    }
+
+    .modal {
+      background: var(--white);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-lg);
+      width: 100%;
+      max-width: 560px;
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: 24px;
+      animation: modal-in 0.18s ease-out;
+    }
+
+    @keyframes modal-in {
+      from { opacity: 0; transform: translateY(12px) scale(0.98); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .modal h2 {
+      margin-bottom: 20px;
+    }
+
+    .visually-hidden {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      margin: -1px;
+      padding: 0;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    @media (max-width: 640px) {
+      .container {
+        padding: 20px 14px 48px;
+      }
+
+      .page-header h1 {
+        font-size: 1.35rem;
+      }
+
+      .card {
+        padding: 18px;
+      }
+
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .form-actions {
+        flex-direction: column;
+      }
+
+      .form-actions .btn {
+        width: 100%;
+      }
+
+      .table-wrap {
+        overflow-x: visible;
+      }
+
+      table, thead, tbody, tr, td, th {
+        display: block;
+        width: 100%;
+      }
+
+      thead {
+        display: none;
+      }
+
+      tbody tr {
+        border: 1px solid var(--neutral-300);
+        border-radius: 8px;
+        margin-bottom: 12px;
+        padding: 8px 0;
+        background: var(--white);
+      }
+
+      tbody td {
+        border-bottom: none;
+        padding: 6px 14px;
+      }
+
+      tbody td::before {
+        content: attr(data-label);
+        display: block;
+        font-size: 0.72rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        color: var(--neutral-500);
+        margin-bottom: 2px;
+      }
+
+      .course-desc {
+        max-width: none;
+      }
+
+      .actions-cell .btn + .btn {
+        margin-left: 8px;
+      }
+    }
+  </style>
+  <meta property="og:image" content="https://bolt.new/static/og_default.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://bolt.new/static/og_default.png">
+</head>
+<body>
+  <div class="container">
+    <header class="page-header">
+      <h1>CodeCraftHub: Your Learning Management Platform</h1>
+      <p>Track your courses, deadlines, and progress in one place.</p>
+    </header>
+
+    <div id="globalAlert" class="alert" role="alert" aria-live="polite"></div>
+
+    <section class="card" aria-labelledby="formHeading">
+      <h2 id="formHeading" class="visually-hidden">Add Course</h2>
+      <form id="courseForm" novalidate>
+        <div class="form-grid">
+          <div class="form-group full-width">
+            <label for="courseName" class="required">Course Name</label>
+            <input type="text" id="courseName" name="name" maxlength="200" autocomplete="off" />
+            <span class="field-error" id="nameError">Course name is required.</span>
+          </div>
+
+          <div class="form-group full-width">
+            <label for="courseDescription" class="required">Description</label>
+            <textarea id="courseDescription" name="description" maxlength="1000"></textarea>
+            <span class="field-error" id="descriptionError">Description is required.</span>
+          </div>
+
+          <div class="form-group">
+            <label for="courseTargetDate" class="required">Target Date</label>
+            <input type="date" id="courseTargetDate" name="target_date" />
+            <span class="field-error" id="targetDateError">Target date is required.</span>
+          </div>
+
+          <div class="form-group">
+            <label for="courseStatus" class="required">Status</label>
+            <select id="courseStatus" name="status">
+              <option value="Not Started">Not Started</option>
+              <option value="In Progress">In Progress</option>
+              <option value="Completed">Completed</option>
+            </select>
+            <span class="field-error" id="statusError">Status is required.</span>
+          </div>
+
+          <div class="form-actions">
+            <button type="submit" class="btn btn-primary" id="submitBtn">
+              <span class="mini-spinner" aria-hidden="true"></span>
+              <span id="submitBtnText">Add Course</span>
+            </button>
+            <button type="button" class="btn btn-secondary" id="cancelEditBtn" style="display: none;">
+              Cancel
+            </button>
+          </div>
+        </div>
+      </form>
+    </section>
+
+    <section class="card" aria-labelledby="listHeading">
+      <h2 id="listHeading">My Courses</h2>
+
+      <div id="loadingState" class="spinner-wrap" role="status" aria-live="polite">
+        <span class="spinner" aria-hidden="true"></span>
+        <span>Loading courses…</span>
+      </div>
+
+      <div id="emptyState" class="empty-state">
+        <div class="empty-icon" aria-hidden="true">◆</div>
+        <h3>No courses yet</h3>
+        <p>Add your first course using the form above to start tracking your learning.</p>
+      </div>
+
+      <div id="tableWrap" class="table-wrap" hidden>
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">Name</th>
+              <th scope="col">Description</th>
+              <th scope="col">Target Date</th>
+              <th scope="col">Status</th>
+              <th scope="col">Created</th>
+              <th scope="col">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="coursesTableBody"></tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+
+  <div class="modal-overlay" id="deleteModalOverlay">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="deleteModalTitle" aria-describedby="deleteModalText">
+      <h2 id="deleteModalTitle">Delete course?</h2>
+      <p id="deleteModalText" style="margin-bottom: 20px; color: var(--neutral-700);"></p>
+      <div style="display: flex; gap: 12px; justify-content: flex-end;">
+        <button type="button" class="btn btn-secondary" id="deleteCancelBtn">Cancel</button>
+        <button type="button" class="btn btn-danger" id="deleteConfirmBtn">Delete</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      "use strict";
+
+      var API_BASE_URL = "http://127.0.0.1:5001/api/courses";
+      var STATUS_OPTIONS = ["Not Started", "In Progress", "Completed"];
+
+      var editingCourseId = null;
+      var deleteTargetId = null;
+      var pendingDeleteCourseName = "";
+
+      var els = {
+        form: document.getElementById("courseForm"),
+        name: document.getElementById("courseName"),
+        description: document.getElementById("courseDescription"),
+        targetDate: document.getElementById("courseTargetDate"),
+        status: document.getElementById("courseStatus"),
+        submitBtn: document.getElementById("submitBtn"),
+        submitBtnText: document.getElementById("submitBtnText"),
+        cancelEditBtn: document.getElementById("cancelEditBtn"),
+        globalAlert: document.getElementById("globalAlert"),
+        loadingState: document.getElementById("loadingState"),
+        emptyState: document.getElementById("emptyState"),
+        tableWrap: document.getElementById("tableWrap"),
+        tableBody: document.getElementById("coursesTableBody"),
+        deleteOverlay: document.getElementById("deleteModalOverlay"),
+        deleteModalText: document.getElementById("deleteModalText"),
+        deleteConfirmBtn: document.getElementById("deleteConfirmBtn"),
+        deleteCancelBtn: document.getElementById("deleteCancelBtn")
+      };
+
+      function showAlert(message, type) {
+        els.globalAlert.textContent = message;
+        els.globalAlert.className = "alert visible " + (type === "success" ? "alert-success" : "alert-error");
+        window.clearTimeout(showAlert._t);
+        showAlert._t = window.setTimeout(function () {
+          els.globalAlert.className = "alert";
+        }, 6000);
+      }
+
+      function hideAlert() {
+        els.globalAlert.className = "alert";
+      }
+
+      function setLoading(visible) {
+        els.loadingState.className = "spinner-wrap" + (visible ? " visible" : "");
+        if (visible) {
+          els.tableWrap.hidden = true;
+          els.emptyState.className = "empty-state";
+        }
+      }
+
+      function setSaving(saving) {
+        els.submitBtn.disabled = saving;
+        els.submitBtn.className = "btn btn-primary" + (saving ? " saving" : "");
+        els.submitBtnText.textContent = saving
+          ? (editingCourseId ? "Saving…" : "Adding…")
+          : (editingCourseId ? "Save Changes" : "Add Course");
+        els.cancelEditBtn.disabled = saving;
+      }
+
+      function formatDate(value) {
+        if (!value) return "—";
+        var date = new Date(value);
+        if (isNaN(date.getTime())) return String(value);
+        return date.toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric" });
+      }
+
+      function statusBadgeClass(status) {
+        switch (status) {
+          case "In Progress": return "badge badge-in-progress";
+          case "Completed": return "badge badge-completed";
+          default: return "badge badge-not-started";
+        }
+      }
+
+      function clearFieldErrors() {
+        ["name", "description", "targetDate", "status"].forEach(function (key) {
+          var input = els[key];
+          var error = document.getElementById(key + "Error");
+          input.classList.remove("invalid");
+          if (error) error.classList.remove("visible");
+        });
+      }
+
+      function setFieldError(key, message) {
+        var input = els[key];
+        var error = document.getElementById(key + "Error");
+        input.classList.add("invalid");
+        if (error) {
+          if (message) error.textContent = message;
+          error.classList.add("visible");
+        }
+      }
+
+      function validateFields() {
+        clearFieldErrors();
+        var valid = true;
+        var firstInvalid = null;
+
+        if (!els.name.value.trim()) {
+          setFieldError("name");
+          valid = false;
+          firstInvalid = firstInvalid || els.name;
+        }
+        if (!els.description.value.trim()) {
+          setFieldError("description");
+          valid = false;
+          firstInvalid = firstInvalid || els.description;
+        }
+        if (!els.targetDate.value) {
+          setFieldError("targetDate");
+          valid = false;
+          firstInvalid = firstInvalid || els.targetDate;
+        }
+        if (!els.status.value || STATUS_OPTIONS.indexOf(els.status.value) === -1) {
+          setFieldError("status");
+          valid = false;
+          firstInvalid = firstInvalid || els.status;
+        }
+
+        if (firstInvalid) firstInvalid.focus();
+        return valid;
+      }
+
+      function resetForm() {
+        editingCourseId = null;
+        els.form.reset();
+        clearFieldErrors();
+        els.submitBtnText.textContent = "Add Course";
+        els.cancelEditBtn.style.display = "none";
+      }
+
+      function startEdit(course) {
+        editingCourseId = course.id;
+        els.name.value = course.name || "";
+        els.description.value = course.description || "";
+        els.targetDate.value = course.target_date || "";
+        els.status.value = STATUS_OPTIONS.indexOf(course.status) !== -1 ? course.status : "Not Started";
+        clearFieldErrors();
+        els.submitBtnText.textContent = "Save Changes";
+        els.cancelEditBtn.style.display = "inline-flex";
+        hideAlert();
+        els.name.focus();
+        els.form.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+
+      function renderCourses(courses) {
+        els.tableBody.textContent = "";
+
+        if (!courses.length) {
+          els.tableWrap.hidden = true;
+          els.emptyState.className = "empty-state visible";
+          return;
+        }
+
+        els.tableWrap.hidden = false;
+        els.emptyState.className = "empty-state";
+
+        courses.forEach(function (course) {
+          var row = document.createElement("tr");
+
+          var nameTd = document.createElement("td");
+          nameTd.setAttribute("data-label", "Name");
+          var nameSpan = document.createElement("span");
+          nameSpan.className = "course-name";
+          nameSpan.textContent = course.name;
+          nameTd.appendChild(nameSpan);
+          row.appendChild(nameTd);
+
+          var descTd = document.createElement("td");
+          descTd.setAttribute("data-label", "Description");
+          descTd.className = "course-desc";
+          descTd.textContent = course.description;
+          row.appendChild(descTd);
+
+          var dateTd = document.createElement("td");
+          dateTd.setAttribute("data-label", "Target Date");
+          dateTd.textContent = formatDate(course.target_date);
+          row.appendChild(dateTd);
+
+          var statusTd = document.createElement("td");
+          statusTd.setAttribute("data-label", "Status");
+          var badge = document.createElement("span");
+          badge.className = statusBadgeClass(course.status);
+          badge.textContent = course.status || "—";
+          statusTd.appendChild(badge);
+          row.appendChild(statusTd);
+
+          var createdTd = document.createElement("td");
+          createdTd.setAttribute("data-label", "Created");
+          createdTd.textContent = formatDate(course.created_at);
+          row.appendChild(createdTd);
+
+          var actionsTd = document.createElement("td");
+          actionsTd.setAttribute("data-label", "Actions");
+          actionsTd.className = "actions-cell";
+
+          var editBtn = document.createElement("button");
+          editBtn.type = "button";
+          editBtn.className = "btn btn-success btn-sm";
+          editBtn.textContent = "Edit";
+          editBtn.setAttribute("aria-label", "Edit course " + course.name);
+          editBtn.addEventListener("click", function () { startEdit(course); });
+
+          var deleteBtn = document.createElement("button");
+          deleteBtn.type = "button";
+          deleteBtn.className = "btn btn-danger btn-sm";
+          deleteBtn.textContent = "Remove";
+          deleteBtn.setAttribute("aria-label", "Remove course " + course.name);
+          deleteBtn.addEventListener("click", function () { openDeleteModal(course); });
+
+          actionsTd.appendChild(editBtn);
+          actionsTd.appendChild(deleteBtn);
+          row.appendChild(actionsTd);
+
+          els.tableBody.appendChild(row);
+        });
+      }
+
+      function loadCourses() {
+        setLoading(true);
+        
+
+        fetch(API_BASE_URL)
+          .then(function (response) {
+            return response.json().catch(function () {
+              throw new Error("The server returned an unexpected response.");
+            }).then(function (data) {
+              return { ok: response.ok, status: response.status, data: data };
+            });
+          })
+          .then(function (result) {
+            if (!result.ok || !result.data || result.data.success !== true) {
+              throw new Error((result.data && result.data.error) || "Failed to load courses (HTTP " + result.status + ").");
+            }
+            renderCourses(Array.isArray(result.data.courses) ? result.data.courses : []);
+          })
+          .catch(function (error) {
+            renderCourses([]);
+            if (error instanceof TypeError) {
+              showAlert("Could not reach the server. Please make sure the backend is running at " + API_BASE_URL + ".", "error");
+            } else {
+              showAlert(error.message || "Failed to load courses.", "error");
+            }
+          })
+          .then(function () {
+            setLoading(false);
+          });
+      }
+
+      function submitCourse(event) {
+        event.preventDefault();
+        if (!validateFields()) return;
+
+        var payload = {
+          name: els.name.value.trim(),
+          description: els.description.value.trim(),
+          target_date: els.targetDate.value,
+          status: els.status.value
+        };
+
+        var isEdit = editingCourseId !== null;
+        var url = isEdit ? API_BASE_URL + "/" + encodeURIComponent(editingCourseId) : API_BASE_URL;
+
+        setSaving(true);
+        hideAlert();
+
+        fetch(url, {
+          method: isEdit ? "PUT" : "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        })
+          .then(function (response) {
+            return response.json().catch(function () {
+              throw new Error("The server returned an unexpected response.");
+            }).then(function (data) {
+              return { ok: response.ok, status: response.status, data: data };
+            });
+          })
+          .then(function (result) {
+            if (!result.ok || !result.data || result.data.success !== true) {
+              throw new Error((result.data && result.data.error) || "Request failed (HTTP " + result.status + ").");
+            }
+            resetForm();
+            setSaving(false);
+            showAlert(result.data.message || (isEdit ? "Course updated successfully." : "Course created successfully."), "success");
+            loadCourses();
+          })
+          .catch(function (error) {
+            setSaving(false);
+            if (error instanceof TypeError) {
+              showAlert("Could not reach the server. Please make sure the backend is running at " + API_BASE_URL + ".", "error");
+            } else {
+              showAlert(error.message || "Request failed.", "error");
+            }
+          });
+      }
+
+      function openDeleteModal(course) {
+        deleteTargetId = course.id;
+        pendingDeleteCourseName = course.name || "this course";
+        els.deleteModalText.textContent = 'Are you sure you want to delete "' + pendingDeleteCourseName + '"? This action cannot be undone.';
+        els.deleteOverlay.className = "modal-overlay visible";
+        els.deleteConfirmBtn.focus();
+      }
+
+      function closeDeleteModal() {
+        els.deleteOverlay.className = "modal-overlay";
+        deleteTargetId = null;
+        pendingDeleteCourseName = "";
+      }
+
+      function confirmDelete() {
+        if (!deleteTargetId) return;
+
+        var url = API_BASE_URL + "/" + encodeURIComponent(deleteTargetId);
+        var deletedName = pendingDeleteCourseName;
+
+        els.deleteConfirmBtn.disabled = true;
+        els.deleteCancelBtn.disabled = true;
+
+        fetch(url, { method: "DELETE" })
+          .then(function (response) {
+            return response.json().catch(function () {
+              throw new Error("The server returned an unexpected response.");
+            }).then(function (data) {
+              return { ok: response.ok, status: response.status, data: data };
+            });
+          })
+          .then(function (result) {
+            if (!result.ok || !result.data || result.data.success !== true) {
+              throw new Error((result.data && result.data.error) || "Failed to delete course (HTTP " + result.status + ").");
+            }
+           if (editingCourseId !== null && editingCourseId === deleteTargetId) {
+  resetForm();
+}
+closeDeleteModal();
+showAlert('Course "' + deletedName + '" was deleted successfully.', "success");
+loadCourses();
+          })
+          .catch(function (error) {
+            closeDeleteModal();
+            if (error instanceof TypeError) {
+              showAlert("Could not reach the server. Please make sure the backend is running at " + API_BASE_URL + ".", "error");
+            } else {
+              showAlert(error.message || "Failed to delete course.", "error");
+            }
+          })
+          .then(function () {
+            els.deleteConfirmBtn.disabled = false;
+            els.deleteCancelBtn.disabled = false;
+          });
+      }
+
+      els.form.addEventListener("submit", submitCourse);
+      els.cancelEditBtn.addEventListener("click", resetForm);
+      els.deleteConfirmBtn.addEventListener("click", confirmDelete);
+      els.deleteCancelBtn.addEventListener("click", closeDeleteModal);
+      els.deleteOverlay.addEventListener("click", function (event) {
+        if (event.target === els.deleteOverlay) closeDeleteModal();
+      });
+      document.addEventListener("keydown", function (event) {
+        if (event.key === "Escape" && els.deleteOverlay.className.indexOf("visible") !== -1) {
+          closeDeleteModal();
+        }
+      });
+
+      loadCourses();
+    })();
+  </script>
+</body>
+</html>
