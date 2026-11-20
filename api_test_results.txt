@@ -1,0 +1,38 @@
+{"error":"status must be one of: Not Started, In Progress, Completed.","success":false}
+eimanboujarwah@EimanBoujarwahs-MacBook-Air ~ % curl -i http://127.0.0.1:5001/api/courses
+HTTP/1.1 200 OK
+Server: Werkzeug/3.1.9 Python/3.9.6
+Date: Fri, 20 Nov 2026 06:14:01 GMT
+Content-Type: application/json
+Content-Length: 40
+Connection: close
+
+{"count":0,"courses":[],"success":true}
+eimanboujarwah@EimanBoujarwahs-MacBook-Air ~ % curl -i -X POST http://127.0.0.1:5001/api/courses \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "Invalid Date Course",
+    "description": "Testing calendar date validation",
+    "target_date": "2026-02-30",
+    "status": "Not Started"
+  }'
+HTTP/1.1 400 BAD REQUEST
+Server: Werkzeug/3.1.9 Python/3.9.6
+Date: Fri, 20 Nov 2026 06:18:15 GMT
+Content-Type: application/json
+Content-Length: 70
+Connection: close
+
+{"error":"target_date must be a real calendar date.","success":false}
+eimanboujarwah@EimanBoujarwahs-MacBook-Air ~ % curl -i -X POST http://127.0.0.1:5001/api/courses \
+  -H "Content-Type: application/json" \
+  -d '{"name":"Malformed JSON Course","description":"Missing closing brace"'
+HTTP/1.1 400 BAD REQUEST
+Server: Werkzeug/3.1.9 Python/3.9.6
+Date: Fri, 20 Nov 2026 06:19:17 GMT
+Content-Type: application/json
+Content-Length: 66
+Connection: close
+
+{"error":"Request body contains malformed JSON.","success":false}
+eimanboujarwah@EimanBoujarwahs-MacBook-Air ~ % 
